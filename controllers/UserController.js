@@ -8,16 +8,16 @@ const createUserController = asyncHandler(
 
         const {email} = req.body.email;
       
-        const findUser = await User.findOne(email);
+        //const findUser = await User.findOne(email);
     
-        if(!findUser){
+       // if(!findUser){
       //Create USER
       const newUser = await User.create(req.body);
       res.json(newUser);
-        }else{
+       // }else{
             // User Already Exists
            throw new Error('User Already Exists');
-        }
+       // }
     }
 );
 

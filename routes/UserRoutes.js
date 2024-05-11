@@ -1,4 +1,5 @@
 const express = require('express');
+
 const {
     createUserController,
     loginUserController,
@@ -9,11 +10,12 @@ const {
 } = require('../controllers/UserController');
 
 const router = express.Router();
+const {authMiddleware} = require('../middlewares/auth/authMiddleware');
 
 router.post('/register',createUserController);
 router.post('/login',loginUserController);
-router.get('/users',getAllUsersController);
-router.get('/user/:id',getUserController);
+router.get('/users',authMiddleware,getAllUsersController);
+router.get('/user/:id',authMiddleware,getUserController);
 router.delete('/user/:id',deleteUserController);
 router.put('/user/:id',updateUserController);
 
