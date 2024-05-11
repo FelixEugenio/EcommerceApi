@@ -69,5 +69,21 @@ const getUserController = asyncHandler(async(req,res)=>{
   }
 })
 
+//  eliminar um Utilizador
+const deleteUserController = asyncHandler(async(req,res)=>{
+  try{
+    const {id} = req.params;
+    const user = await User.findByIdAndDelete(id);
 
-module.exports = {createUserController,loginUserController,getAllUsersController,getUserController}
+    if(!user){
+      throw new Error('User not Found')
+    }
+
+    res.json(user);
+  }catch(error){
+    throw new Error(error);
+  }
+})
+
+
+module.exports = {createUserController,loginUserController,getAllUsersController,getUserController,deleteUserController}
