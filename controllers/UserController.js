@@ -1,6 +1,7 @@
 const User =require('../models/User/UserModel');
 const asyncHandler = require('express-async-handler');
 
+// Criando Usuario na Base de Dados
 const createUser = asyncHandler(
     async(req,res)=>{
 
@@ -17,7 +18,12 @@ const createUser = asyncHandler(
            throw new Error('User Already Exists');
         }
     }
-)
+);
+
+// Fazendo Login
+const loginUserController= asyncHandler(async(req,res)=>{
+
+})
 
 
 module.exports = {createUser}
