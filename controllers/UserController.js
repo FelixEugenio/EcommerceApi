@@ -23,7 +23,7 @@ const createUserController = asyncHandler(
 
 // Fazendo Login
 const loginUserController= asyncHandler(async(req,res)=>{
-  const {email,password} = req.body;
+  const {email,password } = req.body;
   // check if user exists or not 
 
   const findUser = await User.findOne({email});
@@ -84,8 +84,8 @@ const deleteUserController = asyncHandler(async(req,res)=>{
 //  atualizar um Utilizador
 const updateUserController = asyncHandler(async(req,res)=>{
   try{
-    const {id} = req.params;
-    const updateUser = await User.findByIdAndUpdate(id,{
+    const {_id} = req.params;
+    const updateUser = await User.findByIdAndUpdate(_id,{
       firstname:req?.body?.firstname,
       lastname:req?.body?.lastname,
       email:req?.body?.email,
@@ -100,6 +100,38 @@ const updateUserController = asyncHandler(async(req,res)=>{
   }
 })
 
+const blockUserController = asyncHandler(async(req,res)=>{
+ const {id} =req.params;
+try{
+const block = await User.findByIdAndUpdate(id,{
+  isBlocked:true,
+},
+
+{
+  new:true
+})
+}catch(error){
+ throw new Error(error);
+}
+
+});
+
+const unblockUserController = asyncHandler(async(req,res)=>{
+  const {id} =req.params;
+  try{
+  const unblock = await User.findByIdAndUpdate(id,{
+    isBlocked:true,
+  },
+  
+  {
+    new:false
+  })
+  }catch(error){
+   throw new Error(error);
+  }
+  
+});
+
 
 module.exports = 
 {
@@ -109,5 +141,7 @@ module.exports =
   getUserController,
   deleteUserController,
   updateUserController,
-  updateUserController
+  updateUserController,
+  blockUserController,
+  unblockUserController
 }
