@@ -40,7 +40,18 @@ const loginUserController= asyncHandler(async(req,res)=>{
   }else{
     throw new Error('Ivalid Credentials');
   }
+});
+
+// Buscando todos os Utilizadores
+
+const getAllUsersController = asyncHandler(async(req,res)=>{
+  try{
+    const getUsers=await User.find();
+    res.json(getUsers);
+  }catch(error){
+    throw new Error(error);
+  }
 })
 
 
-module.exports = {createUserController,loginUserController}
+module.exports = {createUserController,loginUserController,getAllUsersController}
