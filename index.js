@@ -17,7 +17,7 @@ app.use(notFound);
 app.use(errorHandler);
 
 app.listen(PORT,()=>{
-    console.log(`Server is Runnig at Port`);
+    console.log(`Server is Runnig`);
 })
 
 

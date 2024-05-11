@@ -2,7 +2,7 @@ const User =require('../models/User/UserModel');
 const asyncHandler = require('express-async-handler');
 
 // Criando Usuario na Base de Dados
-const createUser = asyncHandler(
+const createUserController = asyncHandler(
     async(req,res)=>{
 
         const {email} = req.body.email;
@@ -22,8 +22,9 @@ const createUser = asyncHandler(
 
 // Fazendo Login
 const loginUserController= asyncHandler(async(req,res)=>{
-
+  const {email,password} = req.body;
+  console.log(email,password);
 })
 
 
-module.exports = {createUser}
+module.exports = {createUserController,loginUserController}
