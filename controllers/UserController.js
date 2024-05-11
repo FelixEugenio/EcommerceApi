@@ -109,6 +109,10 @@ const block = await User.findByIdAndUpdate(id,{
 
 {
   new:true
+});
+
+res.json({
+  message:'User Blocked'
 })
 }catch(error){
  throw new Error(error);
@@ -125,6 +129,9 @@ const unblockUserController = asyncHandler(async(req,res)=>{
   
   {
     new:false
+  });
+  res.json({
+    message:'User unBlocked'
   })
   }catch(error){
    throw new Error(error);
