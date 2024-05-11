@@ -23,7 +23,15 @@ const createUserController = asyncHandler(
 // Fazendo Login
 const loginUserController= asyncHandler(async(req,res)=>{
   const {email,password} = req.body;
-  console.log(email,password);
+  // check if user exists or not 
+
+  const findUser = await User.findOne({email});
+
+  if(findUser && await findUser.isPasswordMatched(password)){
+   res.json(findUser)
+  }else{
+    throw new Error('Ivalid Credentials');
+  }
 })
 
 
