@@ -53,5 +53,21 @@ const getAllUsersController = asyncHandler(async(req,res)=>{
   }
 })
 
+// Buscando Um Unico Utilizador
+const getUserController = asyncHandler(async(req,res)=>{
+  try{
+    const {id} = req.params;
+    const findUser = await User.findById(id);
 
-module.exports = {createUserController,loginUserController,getAllUsersController}
+    if(!findUser){
+      throw new Error('User not Found')
+    }
+
+    res.json(findUser);
+  }catch(error){
+    throw new Error(error);
+  }
+})
+
+
+module.exports = {createUserController,loginUserController,getAllUsersController,getUserController}
