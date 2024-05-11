@@ -73,17 +73,25 @@ const getUserController = asyncHandler(async(req,res)=>{
 const deleteUserController = asyncHandler(async(req,res)=>{
   try{
     const {id} = req.params;
-    const user = await User.findByIdAndDelete(id);
+    const deleteUser = await User.findByIdAndDelete(id);
 
-    if(!user){
-      throw new Error('User not Found')
-    }
+    res.json(deleteUser);
+  }catch(error){
+    throw new Error(error);
+  }
+})
 
-    res.json(user);
+//  atualizar um Utilizador
+const updateUserController = asyncHandler(async(req,res)=>{
+  try{
+    const {id} = req.params;
+    const updateUser = await User.findByIdAndUpdate(id);
+
+    res.json(updateUser);
   }catch(error){
     throw new Error(error);
   }
 })
 
 
-module.exports = {createUserController,loginUserController,getAllUsersController,getUserController,deleteUserController}
+module.exports = {createUserController,loginUserController,getAllUsersController,getUserController,deleteUserController,updateUserController}
