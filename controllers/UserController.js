@@ -1,4 +1,4 @@
-const User =require('../models/User/UserModel');
+const User = require('../models/User/UserModel');
 const asyncHandler = require('express-async-handler');
 const {generateToken} = require('../config/jwtToken');
 
@@ -124,7 +124,7 @@ const unblockUserController = asyncHandler(async(req,res)=>{
   const {id} =req.params;
   try{
   const unblock = await User.findByIdAndUpdate(id,{
-    isBlocked:true,
+    isBlocked:false,
   },
   
   {
@@ -136,7 +136,6 @@ const unblockUserController = asyncHandler(async(req,res)=>{
   }catch(error){
    throw new Error(error);
   }
-  
 });
 
 
