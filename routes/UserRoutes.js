@@ -8,7 +8,8 @@ const {
     deleteUserController,
     updateUserController,
     blockUserController,
-    unblockUserController
+    unblockUserController,
+    handleRefreshToken
 } = require('../controllers/UserController');
 
 const router = express.Router();
@@ -22,5 +23,6 @@ router.delete('/user/:id',deleteUserController);
 router.put('/user/:id',updateUserController);
 router.get('/block-user/:id',authMiddleware,isAdmin,blockUserController);
 router.get('/unblock-user/:id',authMiddleware,isAdmin,unblockUserController);
+router.get('/refresh',handleRefreshToken);
 
 module.exports = router;

@@ -2,6 +2,7 @@ const User = require('../models/User/UserModel');
 const asyncHandler = require('express-async-handler');
 const {generateToken} = require('../config/jwtToken');
 const {validateMongoDbId} = require('../utils/validateMongodbId');
+const {generateRefreshToken} = require('../config/refreshToken');
 
 // Criando Usuario na Base de Dados
 const createUserController = asyncHandler(
@@ -30,6 +31,18 @@ const loginUserController= asyncHandler(async(req,res)=>{
   const findUser = await User.findOne({email});
 
   if(findUser && await findUser.isPasswordMatched(password)){
+    const refreshToken = await generateRefreshToken(findUser?._id);
+    const updateuser = await User.findByIdAndUpdate(
+      findUser?.id, {
+      refreshToken:refreshToken,
+    },{
+      new:true
+    }
+  );
+  res.cookie('refreshToken',refreshToken,{
+    httpOnly:true,
+    maxAge: 72 * 60 * 60 * 1000,
+  });
    res.json({
     _id:findUser?._id,
     firstname:findUser?.firstname,
@@ -41,6 +54,16 @@ const loginUserController= asyncHandler(async(req,res)=>{
   }else{
     throw new Error('Ivalid Credentials');
   }
+});
+
+// Lidar com referesh Token 
+
+const handleRefreshToken = asyncHandler((req,res)=>{
+const cookie = req.cookies;
+console.log(cookie);
+if(!cookie?.refreshToken) throw new Error('No Refresh Token In Cookies');
+const refreshToken = cookie.refreshToken;
+console.log(refreshToken);
 });
 
 // Buscando todos os Utilizadores
@@ -154,5 +177,6 @@ module.exports =
   updateUserController,
   updateUserController,
   blockUserController,
-  unblockUserController
+  unblockUserController,
+  handleRefreshToken
 }
