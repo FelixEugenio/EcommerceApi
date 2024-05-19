@@ -3,6 +3,7 @@ const asyncHandler = require('express-async-handler');
 const {generateToken} = require('../config/jwtToken');
 const {validateMongoDbId} = require('../utils/validateMongodbId');
 const {generateRefreshToken} = require('../config/refreshToken');
+const jwt = require('jsonwebtoken');
 
 // Criando Usuario na Base de Dados
 const createUserController = asyncHandler(
@@ -58,14 +59,84 @@ const loginUserController= asyncHandler(async(req,res)=>{
 
 // Lidar com referesh Token 
 
-const handleRefreshToken = asyncHandler((req,res)=>{
+const handleRefreshToken = asyncHandler(async(req,res)=>{
 const cookie = req.cookies;
 console.log(cookie);
 if(!cookie?.refreshToken) throw new Error('No Refresh Token In Cookies');
 const refreshToken = cookie.refreshToken;
 console.log(refreshToken);
+const user = await User.findOne({refreshToken});
+res.json(user);
+if(!user) throw new Error(' No Refresh token present in db or not matched');
+jwt.verify(refreshToken,process.env.JWT_SECRET,(err,decoded)=>{
+  if(err || user.id !== decoded.id){
+    throw new Error('There is somenthing with refresh token');
+  }else{
+    const accessToken = generateToken(user?.id);
+    res.json({accessToken});
+  }
+});
 });
 
+// logout funcionalidade
+/*
+const logoutController = asyncHandler(async(req,res)=>{
+const cookie = req.cookies;
+if(!cookie?.refreshToken) throw new Error('No Refresh Token In Cookies');
+const refreshToken = cookie.refreshToken;
+const user = await User.findOne({refreshToken});
+if(!user){
+res.clearCookie('refreshToken',{
+  httpOnly:true,
+  secure:true
+});
+return res.sendStatus(204);
+}
+await User.findOneAndUpdate(refreshToken,{
+  refreshToken:"",
+});
+res.clearCookie('refreshToken',{
+  httpOnly:true,
+  secure:true
+});
+return res.sendStatus(204);
+});
+*/
+
+const logoutController = asyncHandler(async (req, res) => {
+  const cookie = req.cookies;
+
+  if (!cookie?.refreshToken) {
+    console.log('Nenhum token de atualização nos cookies');
+    throw new Error('Nenhum token de atualização nos cookies');
+  }
+
+  const refreshToken = cookie.refreshToken;
+  const user = await User.findOne({ refreshToken });
+
+  if (!user) {
+    console.log('Usuário não encontrado com o token de atualização fornecido');
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: true
+    });
+    return res.sendStatus(204); // Sem Conteúdo
+  }
+
+  // Atualize o token de atualização do usuário
+  await User.findOneAndUpdate(
+    { refreshToken },  // Filtro
+    { $unset: { refreshToken: "" } }  // Atualização
+  );
+
+  console.log('Token de atualização removido do documento do usuário');
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: true
+  });
+
+  return res.sendStatus(204); // Sem Conteúdo
+});
 // Buscando todos os Utilizadores
 
 const getAllUsersController = asyncHandler(async(req,res)=>{
@@ -168,6 +239,7 @@ const unblockUserController = asyncHandler(async(req,res)=>{
 
 
 module.exports = 
+
 {
   createUserController,
   loginUserController,
@@ -178,5 +250,6 @@ module.exports =
   updateUserController,
   blockUserController,
   unblockUserController,
-  handleRefreshToken
+  handleRefreshToken,
+  logoutController
 }

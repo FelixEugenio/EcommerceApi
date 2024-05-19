@@ -9,7 +9,8 @@ const {
     updateUserController,
     blockUserController,
     unblockUserController,
-    handleRefreshToken
+    handleRefreshToken,
+    logoutController
 } = require('../controllers/UserController');
 
 const router = express.Router();
@@ -24,5 +25,6 @@ router.put('/user/:id',updateUserController);
 router.get('/block-user/:id',authMiddleware,isAdmin,blockUserController);
 router.get('/unblock-user/:id',authMiddleware,isAdmin,unblockUserController);
 router.get('/refresh',handleRefreshToken);
+router.get('/logout',logoutController);
 
 module.exports = router;
