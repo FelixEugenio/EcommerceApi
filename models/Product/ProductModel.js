@@ -1,59 +1,56 @@
-const mongoose = require('mongoose'); // Erase if already required
+const mongoose = require('mongoose'); // Apague se já estiver requerido
 
-// Declare the Schema of the Mongo model
-var ProductSchema = new mongoose.Schema({
-    title:{
-        type:String,
-        required:true,
-        trim:true
+// Declare o Schema do modelo Mongo
+const ProductSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  slug: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  category: {
+    type: String,
+    required: true,
+  },
+  brand: {
+    type: String,
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+  },
+  sold: {
+    type: Number,
+    default: 0,
+  },
+  images: {
+    type: Array,
+  },
+  color: {
+    type: String, // Corrigido de "typpe" para "type"
+    required: true,
+  },
+  ratings: [
+    {
+      star: Number,
+      postedby: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     },
-    slug:{
-        type:String,
-        required:true,
-        unique:true,
-        lowercase:true
-    },
-    description:{
-        type:String,
-        required:true,
-       
-    },
-    price:{
-        type:Number,
-        required:true,
-    },
-    category:{
-        type:mongoose.Schema.ObjectId,
-        ref:"Category"
-    },
-    brand:{
-    type:String,
-    enum:["Apple","Samsung","Lenovo"],
-    },
-    quantity:{
-        type:Number,
-        required:true,
+  ],
+}, { timestamps: true });
 
-    },
-    sold:{
-    type:Number,
-    default:0
-    },
-    images:{
-        type:Array
-    },
-    color :{
-    typpe:String,
-    enum:["black" ,"Brown" , "Red"],
-    },
-    ratings:[
-        {
-            star: Number,
-            postedby:{type:mongoose.Schema.Types.ObjectId,ref:"User" }
-        }
-    ]
-    
-},{timestamps:true});
-
-//Export the model
+// Exportar o modelo
 module.exports = mongoose.model('Product', ProductSchema);

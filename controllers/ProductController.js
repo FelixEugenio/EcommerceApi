@@ -1,10 +1,15 @@
 const { json } = require('body-parser');
 const Product = require('../models/Product/ProductModel');
 const asyncHandler = require('express-async-handler');
+const slugify = require('slugify');
 
 // criando produto
 const createProductController = asyncHandler(async (req, res) => {
   try {
+
+    if(req.body.title){
+      req.body.slug = slugify(req.body.title);
+    }
     const newProduct = await Product.create(req.body);
     res.json(newProduct);
   } catch (err) {
@@ -52,11 +57,18 @@ const deleteProductController = asyncHandler(async(req,res)=>{
       }catch(error){
         throw new Error(error);
       }
-})
+});
+
+// atualizando Produto
+
+const updateProductController = asyncHandler(async(req,res)=>{
+
+});
 
 module.exports = {
   createProductController,
   getProductController,
   getAllProductController,
-  deleteProductController
+  deleteProductController,
+  updateProductController
 };

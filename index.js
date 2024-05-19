@@ -7,8 +7,10 @@ const PORT = process.env || 4000;
 const dbConnect = require('./config/dbConnect');
 const { notFound, errorHandler } = require('./middlewares/errors/errorHandler');
 const cookieParser = require('cookie-parser');
+const morgan =require('morgan');
 dbConnect();
 
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(authRouter);
