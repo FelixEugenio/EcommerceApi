@@ -1,6 +1,8 @@
+const { json } = require('body-parser');
 const Product = require('../models/Product/ProductModel');
 const asyncHandler = require('express-async-handler');
 
+// criando produto
 const createProductController = asyncHandler(async (req, res) => {
   try {
     const newProduct = await Product.create(req.body);
@@ -11,6 +13,35 @@ const createProductController = asyncHandler(async (req, res) => {
   }
 });
 
+//pegando um produto pelo id
+
+const getProductController = asyncHandler(async(req,res)=>{
+    const {id} = req.params;
+    try{
+
+
+    const findProduct = await Product.findById(id);
+    res.json(findProduct);
+
+    }catch(error){
+    throw new Error(error);
+    }
+});
+
+// pegando todos os produtos
+
+const getAllProductController = asyncHandler(async(req,res)=>{
+    try{
+        const findAllProducts = await Product.find();
+        res.json(findAllProducts);
+    
+        }catch(error){
+        throw new Error(error);
+        }
+})
+
 module.exports = {
-  createProductController
+  createProductController,
+  getProductController,
+  getAllProductController
 };
