@@ -38,10 +38,25 @@ const getAllProductController = asyncHandler(async(req,res)=>{
         }catch(error){
         throw new Error(error);
         }
+});
+
+// Eliminando um produto
+
+const deleteProductController = asyncHandler(async(req,res)=>{
+    try{
+        const {id} = req.params;
+    
+        const deleteProduct = await Product.findByIdAndDelete(id);
+    
+        res.json(deleteProduct);
+      }catch(error){
+        throw new Error(error);
+      }
 })
 
 module.exports = {
   createProductController,
   getProductController,
-  getAllProductController
+  getAllProductController,
+  deleteProductController
 };
