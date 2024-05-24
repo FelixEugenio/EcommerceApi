@@ -63,7 +63,7 @@ const deleteProductController = asyncHandler(async(req,res)=>{
 
 const updateProductController = asyncHandler(async(req,res)=>{
 
-  const {id} = req.body;
+  const {id} = req.params;
   try{
    if(req.body.title){
      req.body.slug = slugify(req.body.title);
